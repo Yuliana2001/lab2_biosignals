@@ -160,22 +160,31 @@ plto.show()
         6≤𝑛≤11𝑟[𝑛−10] 12≤𝑛≤17
 
 """
-x_1 = ramp_function(0,0,5,1)[1]
-n_1 = ramp_function(0,0,5,1)[0]
-x_2 = ramp_function(5,6,11,1)[1]
-n_2 = ramp_function(5,6,11,1)[0]
-x_3 = ramp_function(10,12,17,1)[1]
-n_3 = ramp_function(10,12,17,1)[0]
+def rampa(n0,n1,n2):
+  n=np.arange(n1,n2+1)
+  ceros=np.zeros(len(n))
+  boolean=(n-n0)>=0
+  ceros[boolean]=(n[boolean]-n0)
 
-# Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
-# generar la gráfica con titulo y ejes.
-plto.plot(n_1, x_1)
-plto.plot(n_2, x_2)
-plto.plot(n_3, x_3)
-plto.xlabel('Tiempo (s)')
-plto.ylabel('Amplitud')
-plto.grid(True) 
-plto.show()
+  return n,ceros
+
+n1, x1 = rampa(0, 0, 5)
+n2, x2 = rampa(5, 6, 11)
+n3, x3 = rampa(10, 12, 17)
+
+# Unimos todas las partes para obtener a x[n], porque cada uno está establecido en un rango distinto
+n = np.concatenate((n1, n2, n3)) """se concatena, porque están definidas en un rango diferente de n"""
+x = np.concatenate((x1, x2, x3))
+
+x2 = np.diff(x) """se deriva la función de interés """
+rango_derivada=np.arange(1,len(x2)+1)
+plt.subplot(1,2,1)
+plt.stem(n,x)
+plt.subplot(1,2,2)
+plt.stem(rango_derivada,x2)
+plt.show()
+
+"""x2 representa la variación entre cada punto consecutivo de x, por lo que toma valores constantes en las secciones de pendiente constante y cambia en los puntos donde la pendiente cambia."""
 
 """  7) Sea x(n) = {0,1,2,3,4, 5̂, 4,3,2,1,0,1,2,3,4,5,5,5,5,10,10,10,10}. Genere la secuencia anterior y
 grafique los resultados. Use las funciones que generó antes para generar la secuencia
