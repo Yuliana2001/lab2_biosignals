@@ -65,6 +65,7 @@ plto.plot(time_vector, np.imag(complex_function), color = 'blue')
 plto.title('Función Exponencial Compleja')
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
+plto.legend("Parte Real", "Parte Imaginaria")
 plto.grid(True) 
 plto.show()
 
