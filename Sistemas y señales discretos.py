@@ -60,13 +60,13 @@ complex_function = exponential_function(0.05,-10,60,0.3)[1]
 
 # Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
 # generar la gráfica con titulo y ejes.
-plto.plot(time_vector, np.real(complex_function), color = 'red')
-plto.plot(time_vector, np.imag(complex_function), color = 'blue')
+plto.plot(time_vector, np.real(complex_function), color = 'red', label = 'Parte Real')
+plto.plot(time_vector, np.imag(complex_function), color = 'blue', label = 'Parte Imaginaria')
 plto.title('Función Exponencial Compleja')
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
-plto.legend("Parte Real", "Parte Imaginaria")
 plto.grid(True) 
+plto.legend()
 plto.show()
 
 """ 4) Implemente una función en Python que permita generar una función sinusoidal, definida en un intervalo
@@ -116,7 +116,8 @@ x_n = x_1[1] + x_2[1] + x_3[1] + x_4[1] + x_5[1]
 plto.stem(n, x_n)
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
-plto.grid(True) 
+plto.grid(True)
+plto.xticks(np.arange(-10,10+1, step=1))
 plto.show()
 
 """ b) """
@@ -142,7 +143,8 @@ x_n = ramp_function(-3,-10,10,2)[1] + ramp_function(2,-10,10,-1)[1] + step_funct
 plto.plot(n, x_n)
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
-plto.grid(True) 
+plto.grid(True)
+plto.xticks(np.arange(-10,10+1, step=1))
 plto.show()
 
 # Para ambos casos el vector de muestras es discreto debido a que son impulsos que toman un valor especificos en 
