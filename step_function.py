@@ -4,7 +4,7 @@ def step_function (n_1, n_2, n_0, amp):
     import matplotlib as plto
 
 # Se define el vector de tiempo "Eje x del plano cartesiano".
-    time_vector = np.linspace(n_1, n_2+1, 1000) 
+    time_vector = np.arange(n_1, n_2+1, step = 1) 
 
 # Se define la variable step_vector la cual contiene un vector de ceros con la misma dimensión de time_vector y de tipo entero.
     step_vector = np.zeros(time_vector.shape, dtype=int)
