@@ -23,7 +23,7 @@ from step_function import step_function
 
 # Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
 # generar la gráfica con titulo y ejes.
-plto.plot(step_function(-5,5,0,1)[0],step_function(-5,5,0,1)[1])
+plto.stem(step_function(-5,5,0,1)[0],step_function(-5,5,0,1)[1])
 plto.title('Función Escalón Unitario')
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
@@ -41,7 +41,7 @@ ramp_vector = ramp_function(0,-5,5,1)[1]
 
 # Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
 # generar la gráfica con titulo y ejes.
-plto.plot(time_vector, ramp_vector, color = 'red')
+plto.stem(time_vector, ramp_vector)
 plto.title('Función Rampa')
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
@@ -114,6 +114,7 @@ x_n = x_1[1] + x_2[1] + x_3[1] + x_4[1] + x_5[1]
 # Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
 # generar la gráfica con titulo y ejes.
 plto.stem(n, x_n)
+plto.title('Suma Entre Funciones Impulso')
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
 plto.grid(True)
@@ -141,6 +142,7 @@ x_n = ramp_function(-3,-10,10,2)[1] + ramp_function(2,-10,10,-1)[1] + step_funct
 # Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
 # generar la gráfica con titulo y ejes.
 plto.plot(n, x_n)
+plto.title('Operaciones Entre Funciones')
 plto.xlabel('Tiempo (s)')
 plto.ylabel('Amplitud')
 plto.grid(True)
@@ -160,47 +162,114 @@ plto.show()
         6≤𝑛≤11𝑟[𝑛−10] 12≤𝑛≤17
 
 """
-def rampa(n0,n1,n2):
-  n=np.arange(n1,n2+1)
-  ceros=np.zeros(len(n))
-  boolean=(n-n0)>=0
-  ceros[boolean]=(n[boolean]-n0)
 
-  return n,ceros
+# Se generan segmentos de la señal usando la función ramp_function.
+# Cada llamada devuelve dos valores: la secuencia x y su respectivo eje de tiempo n.
+x_1 = ramp_function(0,0,5,1)[1] # Primer segmento de la señal
+n_1 = ramp_function(0,0,5,1)[0]
+x_2 = ramp_function(5,6,11,1)[1] # Segundo segmento de la señal
+n_2 = ramp_function(5,6,11,1)[0]
+x_3 = ramp_function(10,12,17,1)[1] # Tercer segmento de la señal
+n_3 = ramp_function(10,12,17,1)[0]
 
-n1, x1 = rampa(0, 0, 5)
-n2, x2 = rampa(5, 6, 11)
-n3, x3 = rampa(10, 12, 17)
+"""se concatena, porque están definidas en un rango diferente de n"""
+n = np.concatenate((n_1, n_2, n_3)) # Une los vectores de tiempo en uno solo
+x = np.concatenate((x_1, x_2, x_3)) # Une las señales en una sola función
 
-# Unimos todas las partes para obtener a x[n], porque cada uno está establecido en un rango distinto
-n = np.concatenate((n1, n2, n3)) """se concatena, porque están definidas en un rango diferente de n"""
-x = np.concatenate((x1, x2, x3))
+"""se deriva la función de interés """
+x2 = np.diff(x) 
+rango_derivada=np.arange(1,len(x2)+1)  # Vector de tiempo para la derivada, desde 1 hasta la cantidad de elementos de x2 + 1
 
-x2 = np.diff(x) """se deriva la función de interés """
-rango_derivada=np.arange(1,len(x2)+1)
-plt.subplot(1,2,1)
-plt.stem(n,x)
-plt.subplot(1,2,2)
-plt.stem(rango_derivada,x2)
-plt.show()
-
-"""x2 representa la variación entre cada punto consecutivo de x, por lo que toma valores constantes en las secciones de pendiente constante y cambia en los puntos donde la pendiente cambia."""
+# Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
+# generar la gráfica con titulo y ejes.
+plto.subplot(2,1,1)
+plto.plot(n,x)
+plto.title('Función Normal')
+plto.ylabel('Amplitud')
+plto.grid(True)
+plto.subplot(2,1,2)
+plto.stem(rango_derivada,x2)
+plto.title('Función Derivada')
+plto.xlabel('Tiempo (s)')
+plto.ylabel('Amplitud')
+plto.yticks(np.arange(-5,5+1, step=1))
+plto.grid(True)
+plto.show()
 
 """  7) Sea x(n) = {0,1,2,3,4, 5̂, 4,3,2,1,0,1,2,3,4,5,5,5,5,10,10,10,10}. Genere la secuencia anterior y
 grafique los resultados. Use las funciones que generó antes para generar la secuencia
 concatenando secuencias más simples. Además, encuentre las siguientes secuencias:
 
-a. x5(n) = 2x(n − 4) + x(n)
-b. x6(n) = 0.001e0.5nx(n) + 10sin(0.05πn) x(n + 2), −20 ≤ n ≤ 20. """
+"""
+# Se construye la secuencia x(n) utilizando ramp_function y step_function.
+x_1 = ramp_function(0,0,4,1)[1] # Parte creciente de la señal
+x_2 = ramp_function(5,5,9,-1)[1] + step_function(5,9,5,5)[1] # Parte decreciente
+x_3 = ramp_function(10,10,15,1)[1]  # Segunda parte creciente
+x_4 = step_function(16,18,16,5)[1] # Parte constante en 5
+x_5 = step_function(19,22,19,10)[1] # Parte constante en 10
+x_n = np.concatenate((x_1,x_2,x_3,x_4,x_5)) # Se concatenan las partes para formar la señal completa.
 
-time_vector = np.linspace(0,20, 23)
-
-x_1 = ramp_function(0,0,4,1)
-x_2 = ramp_function(5,5,10,-1)
-
-result = x_1[1] + x_2[1]
+# Se genera un vector de tiempo
+# 0 = El primer valor del vector será 0 (inicio del tiempo).
+# np.shape(x_n) - 1 = El último valor será np.shape(x_n) - 1, para que el eje de tiempo cubra toda la señal.
+# np.shape(x_n) = Se generan exactamente np.shape(x_n) valores para asegurar que haya un punto de tiempo para cada valor en x_n.
+time_vector = np.linspace(0,np.shape(x_n)[0]-1, np.shape(x_n)[0])
 
 # Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
 # generar la gráfica con titulo y ejes.
-plto.plot(time_vector, result)
+plto.stem(time_vector, x_n)
+plto.grid(True)
+plto.title('Función Derivada')
+plto.xlabel('Tiempo (s)')
+plto.ylabel('Amplitud')
+plto.show()
+
+""" a) x5(n) = 2x(n − 4) + x(n) """
+
+x_0 = np.zeros(4) # Se crea un vector de ceros de longitud 4 
+
+# Se construye la señal x5(n) = 2x(n − 4) + x(n)
+# 1. np.hstack((x_0, x_n)): Desplaza x_n 4 posiciones a la derecha agregando ceros al inicio.
+# 2. np.hstack((x_n, x_0)): Desplaza x_n 4 posiciones a la izquierda agregando ceros al final.
+# 3. Se multiplica la primera por 2 y se suma la segunda para formar la ecuación dada.
+x5 = 2*np.hstack((x_0,x_n))+np.hstack((x_n,x_0)) 
+
+# Se genera el vector de tiempo con la misma cantidad de elementos que x5.
+# 0 = El primer valor del vector será 0 (inicio del tiempo).
+# np.shape(x5)[0] - 1 = El último valor será np.shape(x5)[0] - 1, para cubrir toda la señal.
+# np.shape(x5)[0] = Se generan exactamente np.shape(x5)[0] valores, asegurando que haya un punto de tiempo para cada valor en x5.
+n = np.linspace(0, np.shape(x5)[0] - 1, np.shape(x5)[0])  
+n = np.linspace(0,np.shape(x5)[0]-1,np.shape(x5)[0])
+
+# Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
+# generar la gráfica con titulo y ejes.
+plto.stem(n,x5)
+plto.title('Primera Concatenación')
+plto.xlabel('Tiempo (s)')
+plto.ylabel('Amplitud')
+plto.grid(True)
+plto.show()
+
+""" b) x6(n) = 0.001e0.5nx(n) + 10sin(0.05πn) x(n + 2), −20 ≤ n ≤ 20. """
+
+# Se genera un vector de tiempo 'n' desde -20 hasta 20 con 41 puntos
+# Esto asegura que cada punto en 'x6' tenga un valor de tiempo correspondiente
+n = np.linspace(-20,20,41)
+
+# np.ones(20) crea un vector de unos para completar los primeros 20 valores
+# x_n[:-2] toma la señal x_n sin los últimos 2 valores, simulando x(n) en este rango de tiempo
+xn_1 = np.hstack((np.ones(20),x_n[:-2]))
+# np.ones(18) crea un vector de unos para rellenar los primeros 18 valores.
+# x_n se concatena directamente, simulando el desplazamiento x(n+2).
+xn_2 = np.hstack((np.ones(18),x_n))
+# Se remplazan las anteriores variables en la ecuación
+x6 = 0.001*np.exp(0.5*n)*xn_1+10*np.sin(0.05*np.pi*n)*xn_2
+
+# Se hace uso de la libreria matplotlib mediante plto para usar sus funnciones como stem, title, etc y 
+# generar la gráfica con titulo y ejes.
+plto.stem(n,x6)
+plto.title('Segunda Concatenación')
+plto.xlabel('Tiempo (s)')
+plto.ylabel('Amplitud')
+plto.grid(True)
 plto.show()
