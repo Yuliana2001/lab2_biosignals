@@ -3,7 +3,7 @@ def ramp_function(n_0, n_1, n_2, slope):
     import numpy as np
 
 # Se define el vector de tiempo "Eje x del plano cartesiano".
-    time_vector = np.linspace(n_1,n_2+1,1000)
+    time_vector = np.arange(n_1,n_2+1, step= 1)
 
 # Se define la variable step_vector la cual contiene un vector de ceros con la misma dimensión de time_vector y de tipo entero.
     ramp_vector = np.zeros(time_vector.shape)
@@ -16,13 +16,11 @@ def ramp_function(n_0, n_1, n_2, slope):
 
     for i in time_vector:
 
-        if i < n_0 :
-            ramp_vector[counter] = 0
-
-        elif i >= n_0 :
+        if i >= n_0 :
             ramp_vector[counter] = (i - n_0) * slope 
 
         counter = counter+1
         
 # Finalmente se retorna time_vector y step_vector, los cuales son los vectores que se usan en matplotlib
     return[time_vector, ramp_vector]
+
